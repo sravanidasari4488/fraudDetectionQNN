@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "38991475165",
+    "project_id": "onlyclick-ad8cd",
+    "storage_bucket": "onlyclick-ad8cd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38991475165:android:a4ef820991d6e6270f4634",
+        "android_client_info": {
+          "package_name": "com.onlyclick.serviceprovider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaSCw7huDUCIqhr3JGhol9-SGI0FmmfsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
