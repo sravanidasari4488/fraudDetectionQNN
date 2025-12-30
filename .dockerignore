@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.env*.local
+.env.development.local
+.env.production.local
+.git
+.gitignore
+README.md
+*.md
+.DS_Store
+check_specific_user.js
+check_test_user.js
+fix_test_users.js
