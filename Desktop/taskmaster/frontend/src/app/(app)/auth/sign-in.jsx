@@ -1,0 +1,204 @@
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Keyboard, StatusBar, StyleSheet, View } from 'react-native';
+import SignInFooter from '../../../components/SignIn/SignInFooter';
+import SignInForm from '../../../components/SignIn/SignInForm';
+import SignInFormPassword from '../../../components/SignIn/SignInFormPassword';
+import SignInHeader from '../../../components/SignIn/SignInHeader';
+import SignInIllustration from '../../../components/SignIn/SignInIllustration';
+import Text from '../../../components/ui/Text';
+import { useAuth } from '../../../context/AuthProvider';
+
+export default function SignIn() {
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
+    const [authMode, setAuthMode] = useState('password'); // 'password' or 'magiclink'
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+    const { requestLinkOTP, loginWithPassword, isLoggedIn, isLoading: authLoading } = useAuth();
+    
+    // If user is already logged in, redirect to home
+    useEffect(() => {
+        if (isLoggedIn) {
+          
+            router.replace('/(app)/protected/(tabs)/Home');
+        }
+    }, [isLoggedIn]);
+
+    // Keyboard listeners
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setIsKeyboardVisible(true);
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setIsKeyboardVisible(false);
+        });
+
+        return () => {
+            keyboardDidShowListener?.remove();
+            keyboardDidHideListener?.remove();
+        };
+    }, []);
+
+    const validatePhoneNumber = (phone) => {
+        const phoneRegex = /^[6-9]\d{9,}$/; // Indian mobile number validation (10+ digits)
+        return phoneRegex.test(phone);
+    };
+
+    const handlePhoneNumberChange = (text) => {
+        setPhoneNumber(text);
+        if (error) setError('');
+    };
+
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+        if (error) setError('');
+    };
+
+    const handleToggleAuthMode = () => {
+        setAuthMode(authMode === 'password' ? 'magiclink' : 'password');
+        setError('');
+        setEmailSent(false);
+    };
+
+    const handleRegister = () => {
+        router.push('/(app)/auth/register');
+    };
+
+    const handlePasswordSignIn = async () => {
+        if (isLoading) return; // prevent double taps
+
+        if (!phoneNumber.trim()) {
+            setError('Please enter your phone number');
+            return;
+        }
+
+        if (!validatePhoneNumber(phoneNumber)) {
+            setError('Please enter a valid phone number (minimum 10 digits)');
+            return;
+        }
+
+        if (!password.trim()) {
+            setError('Please enter your password');
+            return;
+        }
+
+        if (!acceptTerms) {
+            setError('Please accept the Terms of Service and Privacy Policy');
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const result = await loginWithPassword(phoneNumber, password);
+            
+            if (result.success) {
+                // Auth provider will handle the redirect based on user state
+              
+            } else {
+                setError(result.error || 'Failed to sign in. Please check your credentials.');
+            }
+        } catch (error) {
+            setError('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleMagicLinkSignIn = async () => {
+        if (isLoading) return; // prevent double taps
+
+        if (!phoneNumber.trim()) {
+            setError('Please enter your phone number');
+            return;
+        }
+
+        if (!validatePhoneNumber(phoneNumber)) {
+            setError('Please enter a valid phone number (minimum 10 digits)');
+            return;
+        }
+
+        if (!acceptTerms) {
+            setError('Please accept the Terms of Service and Privacy Policy');
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const result = await requestLinkOTP(phoneNumber);
+            
+            if (result.success) {
+                setEmailSent(true);
+            } else {
+                setError(result.error || 'Failed to send OTP. Please try again.');
+            }
+        } catch (error) {
+            setError('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSignIn = authMode === 'password' ? handlePasswordSignIn : handleMagicLinkSignIn;
+
+    // Show loading while auth is initializing to prevent flash
+    if (authLoading) {
+        return (
+            <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+                <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+                <ActivityIndicator size="large" color="#3898b3" />
+                <Text style={{ marginTop: 20, color: '#666', fontSize: 16 }}>Checking authentication...</Text>
+            </View>
+        );
+    }
+
+    return (
+        <View style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+            {!isKeyboardVisible && <SignInHeader />}
+            {!isKeyboardVisible && <SignInIllustration />}
+            {authMode === 'password' ? (
+                <SignInFormPassword 
+                    phoneNumber={phoneNumber}
+                    password={password}
+                    error={error}
+                    onPhoneNumberChange={handlePhoneNumberChange}
+                    onPasswordChange={handlePasswordChange}
+                    onSignIn={handleSignIn}
+                    isLoading={isLoading}
+                    acceptTerms={acceptTerms}
+                    setAcceptTerms={setAcceptTerms}
+                    onToggleAuthMode={handleToggleAuthMode}
+                    onRegister={handleRegister}
+                />
+            ) : (
+                <SignInForm 
+                    phoneNumber={phoneNumber}
+                    error={error}
+                    onPhoneNumberChange={handlePhoneNumberChange}
+                    onSignIn={handleSignIn}
+                    isLoading={isLoading}
+                    acceptTerms={acceptTerms}
+                    setAcceptTerms={setAcceptTerms}
+                    emailSent={emailSent}
+                    onToggleAuthMode={handleToggleAuthMode}
+                />
+            )}
+            <SignInFooter />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+});
