@@ -30,7 +30,6 @@ export default function UpdateModal({ visible, onClose, latestVersion }) {
       transparent
       animationType="fade"
       onRequestClose={() => {}} // Prevent dismissing - update is required
-      statusBarTranslucent={true}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
