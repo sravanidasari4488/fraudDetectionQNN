@@ -1,7 +1,7 @@
 import * as NavigationBar from "expo-navigation-bar/src/NavigationBar.android";
 import { usePathname, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, AppState, View } from "react-native";
 import Text from "../components/ui/Text";
 import UpdateModal from "../components/common/UpdateModal";
 import { useAppStates } from "../context/AppStates";
@@ -31,23 +31,44 @@ export default function Index() {
     a();
   }, []);
 
-  // Check for app updates on app launch
+  // Check for app updates on app launch, periodically, and when app comes to foreground
   useEffect(() => {
     const checkUpdate = async () => {
       try {
         const updateInfo = await checkAppUpdate();
+        // Only show modal if update is needed (user hasn't updated to latest version)
         if (updateInfo.needsUpdate) {
           setLatestVersion(updateInfo.latestVersion);
           setShowUpdateModal(true);
+        } else {
+          // User has latest version, ensure modal is hidden
+          setShowUpdateModal(false);
         }
       } catch (error) {
         console.warn('[Index] Failed to check app update:', error instanceof Error ? error.message : String(error));
+        // On error, don't show update modal to avoid blocking users
+        setShowUpdateModal(false);
       }
     };
 
     // Check for updates after a short delay to avoid blocking initial load
     const timeoutId = setTimeout(checkUpdate, 2000);
-    return () => clearTimeout(timeoutId);
+    
+    // Also check periodically (every 5 minutes) in case user is on app for a while
+    const intervalId = setInterval(checkUpdate, 5 * 60 * 1000);
+    
+    // Check for updates when app comes to foreground (e.g., after user updates from Play Store)
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        checkUpdate();
+      }
+    });
+    
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+      subscription?.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -125,7 +146,7 @@ export default function Index() {
       <UpdateModal
         visible={showUpdateModal}
         latestVersion={latestVersion}
-        onClose={() => setShowUpdateModal(false)}
+        onClose={() => {}} // Modal is non-dismissible - user must update
       />
     </>
   );
