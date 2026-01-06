@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import api from '../../app/api/api';
+import api from '../../lib/api/api';
 import CustomAlert from '../common/CustomAlert';
 import Text from '../ui/Text';
 

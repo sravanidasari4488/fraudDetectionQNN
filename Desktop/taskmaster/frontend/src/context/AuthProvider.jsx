@@ -13,7 +13,7 @@ import userService from "../services/userService";
 import { removeUserDetails, setUserDetails } from "../utils/storage";
 import { useAppStates } from "./AppStates";
 import { supabase } from "../data/supabaseClient";
-import api from "../app/api/api";
+import api from "../lib/api/api";
 
 const AuthContext = createContext();
 

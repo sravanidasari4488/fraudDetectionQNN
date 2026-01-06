@@ -1,6 +1,6 @@
-import api from '../app/api/api.js';
-import { requestAuthLink } from '../app/api/requestAuthLink.js';
-import { updateTM } from '../app/api/updateTM.js';
+import api from '../lib/api/api.js';
+import { requestAuthLink } from '../lib/api/requestAuthLink.js';
+import { updateTM } from '../lib/api/updateTM.js';
 import { supabase } from '../data/supabaseClient';
 
 class SupabaseAuthService {

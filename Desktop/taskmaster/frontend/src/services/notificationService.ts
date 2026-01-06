@@ -12,9 +12,8 @@
  */
 
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
 import { getMessaging } from '../config/firebaseConfig';
-import api from '../app/api/api';
+import api from '../lib/api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FCM_TOKEN_STORAGE_KEY = '@fcm_token';

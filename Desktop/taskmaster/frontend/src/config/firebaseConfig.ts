@@ -27,8 +27,16 @@
  * - No manual initialization needed - Firebase is initialized natively
  */
 
-import messaging from '@react-native-firebase/messaging';
 import { Platform } from 'react-native';
+
+// Dynamically import Firebase to handle cases where native module isn't available
+let messaging: any = null;
+try {
+  messaging = require('@react-native-firebase/messaging').default;
+} catch (error) {
+  // Native module not available - app can still work without Firebase
+  console.warn('Firebase Messaging native module not available. Push notifications will be disabled.');
+}
 
 /**
  * Initialize Firebase (for React Native Firebase)
@@ -40,6 +48,11 @@ export const initializeFirebase = (): boolean => {
   // Only initialize on Android
   if (Platform.OS !== 'android') {
     console.log('Firebase initialization skipped - Android only');
+    return false;
+  }
+
+  // Check if native module is available
+  if (!messaging) {
     return false;
   }
 
@@ -67,6 +80,10 @@ export const initializeFirebase = (): boolean => {
 export const getMessaging = () => {
   if (Platform.OS !== 'android') {
     console.warn('Firebase Messaging only available on Android');
+    return null;
+  }
+
+  if (!messaging) {
     return null;
   }
 

@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import Text from '../../../../../components/ui/Text';
 import AppHeader from '../../../../../components/common/AppHeader';
-import { getTrainingVideos } from '../../../../api/trainingVideos';
+import { getTrainingVideos } from '../../../../../lib/api/trainingVideos';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");

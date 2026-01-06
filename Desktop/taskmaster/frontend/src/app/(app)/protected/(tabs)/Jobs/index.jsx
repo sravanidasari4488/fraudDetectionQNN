@@ -22,7 +22,7 @@ import AppHeader from '../../../../../components/common/AppHeader';
 import CustomAlert from '../../../../../components/common/CustomAlert';
 import Text from '../../../../../components/ui/Text';
 import { useBookings } from '../../../../../context/bookingsContext';
-import api from '../../../../api/api';
+import api from '../../../../../lib/api/api';
 // Import Audio with try-catch to handle loading errors
 let Audio = null;
 try {

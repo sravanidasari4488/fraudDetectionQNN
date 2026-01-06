@@ -8,8 +8,13 @@ import { useAppStates } from "../context/AppStates";
 import { useAuth } from "../context/AuthProvider";
 
 // Register Firebase background message handler (must be imported before app initializes)
+// Wrap in try-catch to allow app to work even if Firebase native module isn't available
 if (Platform.OS === 'android') {
-  require('../utils/firebaseBackgroundMessageHandler');
+  try {
+    require('../utils/firebaseBackgroundMessageHandler');
+  } catch (error) {
+    console.warn('Firebase background handler not available:', error.message);
+  }
 }
 
 export default function Index() {

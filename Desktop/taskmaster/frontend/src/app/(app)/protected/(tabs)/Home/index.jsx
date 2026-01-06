@@ -6,7 +6,7 @@ import Header from "../../../../../components/Home/Header";
 import Info from "../../../../../components/Home/Info";
 import { useAuth } from "../../../../../context/AuthProvider";
 import { useBookings } from "../../../../../context/bookingsContext";
-import api from "../../../../api/api";
+import api from "../../../../../lib/api/api";
 export default function Home() {
   const router = useRouter()
   const { user, isLoggedIn, userData, authToken } = useAuth();
