@@ -1,0 +1,118 @@
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.theme-toggle-buttons {
+  display: flex;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.theme-name {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .theme-toggle-container {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+  
+  .theme-toggle-label {
+    display: none;
+  }
+  
+  .theme-toggle-btn {
+    padding: 8px 10px;
+  }
+  
+  .theme-name {
+    display: none;
+  }
+  
+  .theme-icon {
+    font-size: 1.2rem;
+  }
+}
+
+/* Theme-specific styles */
+[data-theme="space"] .theme-toggle-container {
+  background: rgba(20, 184, 166, 0.15);
+  border-color: rgba(20, 184, 166, 0.3);
+}
+
+[data-theme="space"] .theme-toggle-btn.active {
+  background: rgba(20, 184, 166, 0.3);
+  color: #14b8a6;
+}
+
+[data-theme="earth"] .theme-toggle-container {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="earth"] .theme-toggle-btn.active {
+  background: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+[data-theme="data"] .theme-toggle-container {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="data"] .theme-toggle-btn.active {
+  background: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
